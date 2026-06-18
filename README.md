@@ -1,4 +1,4 @@
-# pdf-to-speech# PDF Audio Reader
+# PDF Audio Reader
 
 A simple Python utility that takes text from a PDF document and reads it aloud using the `pyttsx3` text-to-speech engine.
 
