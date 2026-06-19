@@ -1,36 +1,52 @@
-import pypdf
 import pyttsx3
+from pypdf import PdfReader
+from pathlib import Path
+import sys
 
-def smooth_read(pdf_path):
+def initialize_engine(rate=170, voice_index=0):
+    """Configures the TTS engine."""
     engine = pyttsx3.init()
-    engine.setProperty('rate', 170)
-    
-    # Optional: Select a specific voice if the default is silent
+    engine.setProperty('rate', rate)
     voices = engine.getProperty('voices')
-    # Try changing index [0] to [1] if you hear nothing
-    engine.setProperty('voice', voices[0].id) 
-    
-    try:
-        reader = pypdf.PdfReader(pdf_path)
-        
-        for i, page in enumerate(reader.pages):
-            text = page.extract_text()
-            if text:
-                # Clean up: Replace newlines with spaces to prevent word-splitting
-                clean_text = " ".join(text.split())
-                
-                print(f"--- Processing Page {i+1} ---")
-                print(f"Reading: {clean_text}")
-                
-                # Add the whole page to the queue
-                engine.say(clean_text)
-                
-                # Run the queue for this page
-                # This will wait for the page to finish and then release 
-                # control back to the loop for the next page
-                engine.runAndWait()
-                
-    except Exception as e:
-        print(f"J.A.R.V.I.S. Error Report: {e}")
+    if voice_index < len(voices):
+        engine.setProperty('voice', voices[voice_index].id)
+    return engine
 
-smooth_read('delete.pdf')
+def process_text(text):
+    """Cleans text to sound more natural."""
+    if not text:
+        return ""
+    
+    return " ".join(text.split())
+
+def read_pdf(file_path):
+    path = Path(file_path)
+    if not path.exists():
+        print(f"Error: File '{file_path}' not found.")
+        return
+
+    engine = initialize_engine()
+    reader = PdfReader(path)
+    
+    print(f"--- Starting: {path.name} ({len(reader.pages)} pages) ---")
+    print("Press Ctrl+C to stop reading.")
+
+    try:
+        for i, page in enumerate(reader.pages):
+            text = process_text(page.extract_text())
+            if text:
+                print(f"Processing Page {i+1}...")
+                engine.say(text)
+                
+                engine.runAndWait()
+    except KeyboardInterrupt:
+        print("\n--- Reading Interrupted by User ---")
+        engine.stop()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        engine.stop()
+        print("--- Finished ---")
+
+if __name__ == "__main__":
+    read_pdf('delete.pdf')
