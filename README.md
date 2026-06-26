@@ -1,11 +1,18 @@
-# PDF Audio Reader
+# Audio & PDF Control Center
 
-A versatile command-line Python utility that extracts text from a PDF document and reads it aloud or converts it into an MP3 audiobook using the `pyttsx3` text-to-speech engine.
+A versatile Python desktop application (GUI) and command-line utility that converts PDF documents into spoken audio and transcribes spoken WAV files into text using Google Speech Recognition. 
+
+---
+
+## User Interface
+![Application Interface](user.png)
 
 ---
 
 ## Features
-* **PDF Parsing**: Uses `pypdf` to accurately extract text from PDF files.
-* **On-the-Fly Customization**: Dynamically adjust speaking speed (`--rate`) and switch between available system voices (`--voice`) straight from the terminal.
-* **Audiobook Generation**: Export your PDFs directly to high-quality `.mp3` files (`--save`) for offline listening.
-* **Formatting Cleanup**: Automatically removes messy newlines and layout whitespaces from the PDF to ensure smooth, continuous speech.
+
+* **Interactive GUI Control**: Use an intuitive window interface with speed sliders, accent drop-down menus, and a live tracking console log.
+* **PDF Aloud Reader**: Uses `pypdf` to accurately extract text from documents and parse them into clean, fluent speech streams.
+* **Audiobook Generation**: Export your multi-page PDFs directly to offline high-quality `.mp3` files for portable listening.
+* **Speech-to-Text (WAV Conversion)**: Pass local audio recording paths to instantly decode spoke text words via Google's free API cloud gateway.
+* **Formatting Cleanup**: Automatically filters out messy layout whitespaces and raw inline newline breaks for natural punctuation parsing.
